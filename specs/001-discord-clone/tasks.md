@@ -33,13 +33,13 @@ under `convex/`, tests under `tests/`.
 
 **Purpose**: Project initialization and basic tooling
 
-- [ ] T001 Scaffold Vite + React 18 + TypeScript project at repo root (`npm create vite@latest . -- --template react-ts`), keeping the existing `.claude/`, `.specify/`, `specs/`, `.git/`, `.gitignore`
-- [ ] T002 Install and configure Tailwind CSS (`tailwind.config.ts`, `postcss.config.js`, base styles in `src/index.css`) for the Discord-like dark theme
-- [ ] T003 [P] Install and configure React Router (`react-router-dom`) with a placeholder route tree in `src/App.tsx`
-- [ ] T004 [P] Configure ESLint + Prettier for TypeScript strict mode (constitution Principle III)
-- [ ] T005 Run `npx convex dev` once to create the Convex project and initialize `convex/` directory and `.env.local`
-- [ ] T006 [P] Install `@convex-dev/auth` and `@auth/core@0.41.1` per research.md §1
-- [ ] T007 Confirm `.env.local` is listed in `.gitignore` (already present from Phase 0; verify, do not duplicate)
+- [X] T001 Scaffold Vite + React 18 + TypeScript project at repo root (`npm create vite@latest . -- --template react-ts`), keeping the existing `.claude/`, `.specify/`, `specs/`, `.git/`, `.gitignore`
+- [X] T002 Install and configure Tailwind CSS (`tailwind.config.ts`, `postcss.config.js`, base styles in `src/index.css`) for the Discord-like dark theme
+- [X] T003 [P] Install and configure React Router (`react-router-dom`) with a placeholder route tree in `src/App.tsx`
+- [X] T004 [P] Configure ESLint + Prettier for TypeScript strict mode (constitution Principle III)
+- [X] T005 Run `npx convex dev` once to create the Convex project and initialize `convex/` directory and `.env.local`
+- [X] T006 [P] Install `@convex-dev/auth` and `@auth/core@0.41.1` per research.md §1
+- [X] T007 Confirm `.env.local` is listed in `.gitignore` (already present from Phase 0; verify, do not duplicate)
 
 **Checkpoint**: `npm run dev` serves a blank Vite+Tailwind app; `npx convex dev` connects to a live Convex deployment.
 
@@ -51,17 +51,17 @@ under `convex/`, tests under `tests/`.
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T008 Define full schema in `convex/schema.ts`: spread `authTables`, then add `servers`, `serverMembers` (with `by_server`, `by_user`, `by_server_and_user` indexes), `channels` (`by_server`), `messages` (`by_channel`), `directMessageThreads` (`by_users`), `directMessages` (`by_thread`), `typingIndicators` (`by_channel`, `by_thread`), `calls` (`by_channel`, `by_thread`), `callParticipants` (`by_call`, `by_call_and_user`), `signals` (`by_call_and_recipient`) — per data-model.md
-- [ ] T009 Configure Convex Auth in `convex/auth.ts` with the `Password` provider per research.md §1
-- [ ] T010 Wrap the app in `ConvexAuthProvider` in `src/main.tsx`
-- [ ] T011 [P] Implement `getCurrentUser`, `updateProfile` in `convex/users.ts` (FR-001)
-- [ ] T012 [P] Implement `heartbeat`, `getPresence` in `convex/users.ts` using `lastHeartbeat` with the 30s cutoff (FR-002)
-- [ ] T013 [P] Create `usePresenceHeartbeat` hook in `src/hooks/usePresenceHeartbeat.ts` that calls `heartbeat` on an interval while the app is open
-- [ ] T014 [P] Create permission-check helpers in `convex/lib/permissions.ts`: `assertServerMember`, `assertServerOwner`, `assertMessageAuthor` (constitution Principle IV — every mutation below calls one of these)
-- [ ] T015 [P] Create validation helpers in `convex/lib/validation.ts`: `assertMessageLength` (2000 chars, FR-026)
-- [ ] T016 [P] Build `LoginPage.tsx` in `src/routes/LoginPage.tsx` (sign up / log in forms using Convex Auth's `signIn`)
-- [ ] T017 Build empty-state shell layout: `src/routes/ServerLayout.tsx`, `src/components/ServerRail.tsx`, `src/components/ChannelSidebar.tsx`, `src/components/MemberList.tsx` (render with no data yet; populated in later stories)
-- [ ] T018 [P] Set up Vitest config (`vitest.config.ts`) and `tests/unit/` directory for `convex/lib/*` and `src/lib/webrtc/*` (plan.md Testing section)
+- [X] T008 Define full schema in `convex/schema.ts`: spread `authTables`, then add `servers`, `serverMembers` (with `by_server`, `by_user`, `by_server_and_user` indexes), `channels` (`by_server`), `messages` (`by_channel`), `directMessageThreads` (`by_users`), `directMessages` (`by_thread`), `typingIndicators` (`by_channel`, `by_thread`), `calls` (`by_channel`, `by_thread`), `callParticipants` (`by_call`, `by_call_and_user`), `signals` (`by_call_and_recipient`) — per data-model.md
+- [X] T009 Configure Convex Auth in `convex/auth.ts` with the `Password` provider per research.md §1
+- [X] T010 Wrap the app in `ConvexAuthProvider` in `src/main.tsx`
+- [X] T011 [P] Implement `getCurrentUser`, `updateProfile` in `convex/users.ts` (FR-001)
+- [X] T012 [P] Implement `heartbeat`, `getPresence` in `convex/users.ts` using `lastHeartbeat` with the 30s cutoff (FR-002)
+- [X] T013 [P] Create `usePresenceHeartbeat` hook in `src/hooks/usePresenceHeartbeat.ts` that calls `heartbeat` on an interval while the app is open
+- [X] T014 [P] Create permission-check helpers in `convex/lib/permissions.ts`: `assertServerMember`, `assertServerOwner`, `assertMessageAuthor` (constitution Principle IV — every mutation below calls one of these)
+- [X] T015 [P] Create validation helpers in `convex/lib/validation.ts`: `assertMessageLength` (2000 chars, FR-026)
+- [X] T016 [P] Build `LoginPage.tsx` in `src/routes/LoginPage.tsx` (sign up / log in forms using Convex Auth's `signIn`)
+- [X] T017 Build empty-state shell layout: `src/routes/ServerLayout.tsx`, `src/components/ServerRail.tsx`, `src/components/ChannelSidebar.tsx`, `src/components/MemberList.tsx` (render with no data yet; populated in later stories)
+- [X] T018 [P] Set up Vitest config (`vitest.config.ts`) and `tests/unit/` directory for `convex/lib/*` and `src/lib/webrtc/*` (plan.md Testing section) — created `tests/unit/lib/` and `tests/unit/webrtc/` with real (not placeholder) tests for `validation.ts` and `constants.ts` to prove the harness picks up nested unit tests; full `permissions.ts` (needs a Convex test context) and `peerConnection.ts` glare/rollback coverage (needs `RTCPeerConnection` mocking) remain for T063/T064
 
 **Checkpoint**: A user can sign up, log in, and see an empty app shell. `convex/lib/permissions.ts` and `validation.ts` are unit-testable in isolation.
 
@@ -75,17 +75,17 @@ under `convex/`, tests under `tests/`.
 
 ### Implementation for User Story 2
 
-- [ ] T019 [P] [US2] Implement `createServer` in `convex/servers.ts`: creates server + owner `serverMembers` row + default "general" text channel via `channels` insert (FR-003, FR-004)
-- [ ] T020 [P] [US2] Implement `listChannels` in `convex/channels.ts` (FR-010) — needed immediately so the default channel is visible after creation
-- [ ] T021 [US2] Implement `renameServer`, `removeMember` in `convex/servers.ts`, gated by `assertServerOwner` (FR-007)
-- [ ] T022 [US2] Implement `leaveServer` in `convex/servers.ts`: voluntary leave, ownership transfer to next-oldest `serverMembers` row by `joinedAt`, or server deletion if last member (FR-007a, Clarification)
-- [ ] T023 [US2] Implement `generateInvite`/`getInvite` (creates/returns non-expiring `inviteCode`) and `joinViaInvite` in `convex/servers.ts` (FR-005, FR-027)
-- [ ] T024 [US2] Implement `listMyServers`, `listMembers` (joined with `getPresence`) in `convex/servers.ts` (FR-006)
-- [ ] T025 [US2] Wire `ServerRail.tsx` to `listMyServers` (live server list)
-- [ ] T026 [US2] Wire `ChannelSidebar.tsx` to `listChannels` (live channel list, shows "general" immediately after creation)
-- [ ] T027 [US2] Wire `MemberList.tsx` to `listMembers` (live member list with online/offline dot from presence)
-- [ ] T028 [US2] Build "Create Server" and "Join via Invite" UI flows (modal or dedicated route) calling `createServer` / `joinViaInvite`
-- [ ] T029 [US2] Build server settings UI (rename, generate/copy invite link, remove member, leave server) gated in the UI to owner-only actions where applicable
+- [X] T019 [P] [US2] Implement `createServer` in `convex/servers.ts`: creates server + owner `serverMembers` row + default "general" text channel via `channels` insert (FR-003, FR-004)
+- [X] T020 [P] [US2] Implement `listChannels` in `convex/channels.ts` (FR-010) — needed immediately so the default channel is visible after creation
+- [X] T021 [US2] Implement `renameServer`, `removeMember` in `convex/servers.ts`, gated by `assertServerOwner` (FR-007)
+- [X] T022 [US2] Implement `leaveServer` in `convex/servers.ts`: voluntary leave, ownership transfer to next-oldest `serverMembers` row by `joinedAt`, or server deletion if last member (FR-007a, Clarification)
+- [X] T023 [US2] Implement `generateInvite`/`getInvite` (creates/returns non-expiring `inviteCode`) and `joinViaInvite` in `convex/servers.ts` (FR-005, FR-027) — added `generateInvite` mutation (owner-gated, rotates `inviteCode` via `crypto.randomUUID()`) and wired a "Regenerate invite link" action into `ServerSettingsModal.tsx` (owner-only, confirms before invalidating the old link)
+- [X] T024 [US2] Implement `listMyServers`, `listMembers` (joined with `getPresence`) in `convex/servers.ts` (FR-006)
+- [X] T025 [US2] Wire `ServerRail.tsx` to `listMyServers` (live server list)
+- [X] T026 [US2] Wire `ChannelSidebar.tsx` to `listChannels` (live channel list, shows "general" immediately after creation)
+- [X] T027 [US2] Wire `MemberList.tsx` to `listMembers` (live member list with online/offline dot from presence)
+- [X] T028 [US2] Build "Create Server" and "Join via Invite" UI flows (modal or dedicated route) calling `createServer` / `joinViaInvite`
+- [X] T029 [US2] Build server settings UI (rename, generate/copy invite link, remove member, leave server) gated in the UI to owner-only actions where applicable
 
 **Checkpoint**: Run quickstart.md M2 — server creation, invite join, live member list all verified with two browsers.
 
@@ -99,18 +99,18 @@ under `convex/`, tests under `tests/`.
 
 ### Tests for User Story 1 (constitution Principle VI — NON-NEGOTIABLE smoke test)
 
-- [ ] T030 [P] [US1] Smoke test "send message" in `tests/convex/messages.smoke.test.ts` using `convex-test`: a member sends a message and it is retrievable via `listMessages`; a non-member is rejected
+- [X] T030 [P] [US1] Smoke test "send message" in `tests/convex/messages.smoke.test.ts` using `convex-test`: a member sends a message and it is retrievable via `listMessages`; a non-member is rejected
 
 ### Implementation for User Story 1
 
-- [ ] T031 [P] [US1] Implement `sendMessage` in `convex/messages.ts`, gated by `assertServerMember` + `assertMessageLength` (FR-011, FR-026)
-- [ ] T032 [P] [US1] Implement `listMessages` (paginated, newest-first via `usePaginatedQuery`/`paginationOptsValidator`) in `convex/messages.ts` (FR-012, FR-014)
-- [ ] T033 [US1] Implement `editMessage`, `deleteMessage` in `convex/messages.ts`, gated by `assertMessageAuthor` (FR-013)
-- [ ] T034 [P] [US1] Implement `setTyping`, `listTyping` in `convex/typing.ts` for `channelId` (FR-015)
-- [ ] T035 [US1] Build `MessageList.tsx` in `src/components/MessageList.tsx` using `usePaginatedQuery` + `loadMore` on scroll-up (FR-014)
-- [ ] T036 [US1] Build `MessageInput.tsx` in `src/components/MessageInput.tsx`: send on submit, call `setTyping` on keystroke (debounced), 2000-char limit with client-side warning
-- [ ] T037 [US1] Build `TypingIndicator.tsx` in `src/components/TypingIndicator.tsx` wired to `listTyping`
-- [ ] T038 [US1] Wire `ChannelPage.tsx` in `src/routes/ChannelPage.tsx` to render `MessageList` + `MessageInput` + `TypingIndicator` for the active channel
+- [X] T031 [P] [US1] Implement `sendMessage` in `convex/messages.ts`, gated by `assertServerMember` + `assertMessageLength` (FR-011, FR-026)
+- [X] T032 [P] [US1] Implement `listMessages` (paginated, newest-first via `usePaginatedQuery`/`paginationOptsValidator`) in `convex/messages.ts` (FR-012, FR-014)
+- [X] T033 [US1] Implement `editMessage`, `deleteMessage` in `convex/messages.ts`, gated by `assertMessageAuthor` (FR-013)
+- [X] T034 [P] [US1] Implement `setTyping`, `listTyping` in `convex/typing.ts` for `channelId` (FR-015)
+- [X] T035 [US1] Build `MessageList.tsx` in `src/components/MessageList.tsx` using `usePaginatedQuery` + `loadMore` on scroll-up (FR-014)
+- [X] T036 [US1] Build `MessageInput.tsx` in `src/components/MessageInput.tsx`: send on submit, call `setTyping` on keystroke (debounced), 2000-char limit with client-side warning
+- [X] T037 [US1] Build `TypingIndicator.tsx` in `src/components/TypingIndicator.tsx` wired to `listTyping`
+- [X] T038 [US1] Wire `ChannelPage.tsx` in `src/routes/ChannelPage.tsx` to render `MessageList` + `MessageInput` + `TypingIndicator` for the active channel
 
 **Checkpoint**: Run quickstart.md M3 — real-time send/edit/delete/typing/infinite-scroll all verified with two browsers. **This is the MVP.**
 
@@ -124,10 +124,10 @@ under `convex/`, tests under `tests/`.
 
 ### Implementation for User Story 3
 
-- [ ] T039 [US3] Implement `createChannel`, `renameChannel` in `convex/channels.ts`, gated by `assertServerOwner`, supporting `type: "text" | "voice"` (FR-008)
-- [ ] T040 [US3] Implement `deleteChannel` in `convex/channels.ts`: cascades to delete all `messages` rows for the channel (FR-009) and end any active `calls` row for the channel (FR-025, Edge Case)
-- [ ] T041 [US3] Build "Create Channel" UI (text/voice type picker) in `ChannelSidebar.tsx`, owner-only
-- [ ] T042 [US3] Build channel rename/delete UI (context menu or settings icon) in `ChannelSidebar.tsx`, owner-only
+- [X] T039 [US3] Implement `createChannel`, `renameChannel` in `convex/channels.ts`, gated by `assertServerOwner`, supporting `type: "text" | "voice"` (FR-008)
+- [X] T040 [US3] Implement `deleteChannel` in `convex/channels.ts`: cascades to delete all `messages` rows for the channel (FR-009) and end any active `calls` row for the channel (FR-025, Edge Case)
+- [X] T041 [US3] Build "Create Channel" UI (text/voice type picker) in `ChannelSidebar.tsx`, owner-only
+- [X] T042 [US3] Build channel rename/delete UI (context menu or settings icon) in `ChannelSidebar.tsx`, owner-only
 
 **Checkpoint**: Owner can fully manage channels; non-owners cannot see management controls and are rejected server-side if they try anyway.
 
@@ -141,12 +141,12 @@ under `convex/`, tests under `tests/`.
 
 ### Implementation for User Story 4
 
-- [ ] T043 [P] [US4] Implement `openThread` in `convex/directMessages.ts`: find-or-create, asserting the two users share ≥1 server via `serverMembers.by_user` (FR-016)
-- [ ] T044 [US4] Implement `listMessages` (paginated), `sendMessage`, `editMessage`, `deleteMessage` in `convex/directMessages.ts`, gated by thread-participant checks — note the shared-server check applies only at `openThread` time, not to subsequent messages, per Clarification (FR-017)
-- [ ] T045 [US4] Extend `setTyping`/`listTyping` in `convex/typing.ts` to accept `threadId` (FR-015 applied to DMs)
-- [ ] T046 [US4] Build `DirectMessagePage.tsx` in `src/routes/DirectMessagePage.tsx`, reusing `MessageList`/`MessageInput`/`TypingIndicator` against thread data instead of channel data
-- [ ] T047 [US4] Add "Message" action to `MemberList.tsx` that calls `openThread` and navigates to `DirectMessagePage`
-- [ ] T048 [US4] Build a DM thread list UI (sidebar section or separate panel) wired to `listMyThreads`
+- [X] T043 [P] [US4] Implement `openThread` in `convex/directMessages.ts`: find-or-create, asserting the two users share ≥1 server via `serverMembers.by_user` (FR-016)
+- [X] T044 [US4] Implement `listMessages` (paginated), `sendMessage`, `editMessage`, `deleteMessage` in `convex/directMessages.ts`, gated by thread-participant checks — note the shared-server check applies only at `openThread` time, not to subsequent messages, per Clarification (FR-017)
+- [X] T045 [US4] Extend `setTyping`/`listTyping` in `convex/typing.ts` to accept `threadId` (FR-015 applied to DMs)
+- [X] T046 [US4] Build `DirectMessagePage.tsx` in `src/routes/DirectMessagePage.tsx`, reusing `MessageList`/`MessageInput`/`TypingIndicator` against thread data instead of channel data
+- [X] T047 [US4] Add "Message" action to `MemberList.tsx` that calls `openThread` and navigates to `DirectMessagePage`
+- [X] T048 [US4] Build a DM thread list UI (sidebar section or separate panel) wired to `listMyThreads`
 
 **Checkpoint**: Run quickstart.md M4 — DM open/send/edit/delete and presence-flip timing verified with two browsers.
 
@@ -160,22 +160,22 @@ under `convex/`, tests under `tests/`.
 
 ### Tests for User Story 5 (constitution Principle VI — NON-NEGOTIABLE smoke test)
 
-- [ ] T049 [P] [US5] Smoke test "join call" in `tests/convex/calls.smoke.test.ts` using `convex-test`: joining an empty voice channel creates a call and a participant row; a 5th join attempt when 4 already exist is rejected with `channel_full`
+- [X] T049 [P] [US5] Smoke test "join call" in `tests/convex/calls.smoke.test.ts` using `convex-test`: joining an empty voice channel creates a call and a participant row; a 5th join attempt when 4 already exist is rejected with `channel_full`
 
 ### Implementation for User Story 5
 
-- [ ] T050 [P] [US5] Implement `joinVoiceChannel` in `convex/calls.ts`: find-or-create `calls` row by `channelId`, enforce the 4-participant cap via `callParticipants.by_call` count (FR-018, FR-019, Clarification)
-- [ ] T051 [P] [US5] Implement `startDmCall` in `convex/calls.ts` for `threadId`-based calls (FR-024)
-- [ ] T052 [US5] Implement `leaveCall` in `convex/calls.ts`: deletes the participant row, ends the call if last participant (FR-023)
-- [ ] T053 [P] [US5] Implement `setMediaState`, `setSpeaking`, `heartbeatCall` in `convex/calls.ts` (FR-020, FR-021)
-- [ ] T054 [P] [US5] Implement `listParticipants`, `getActiveCallForChannel` in `convex/calls.ts` (FR-022)
-- [ ] T055 [P] [US5] Implement `sendSignal`, `listSignalsForMe` in `convex/signals.ts`, gated by current-participant checks on both `fromUserId` and `toUserId`
-- [ ] T056 [P] [US5] Implement perfect-negotiation `RTCPeerConnection` wrapper in `src/lib/webrtc/peerConnection.ts` per research.md §4 (polite/impolite role assignment, ICE rollback on glare, ICE candidate queueing)
-- [ ] T057 [P] [US5] Define STUN server config in `src/lib/webrtc/constants.ts` (`stun:stun.l.google.com:19302`, documented no-TURN limitation)
-- [ ] T058 [US5] Implement `useWebRTCCall` hook in `src/hooks/useWebRTCCall.ts`: reacts to `listParticipants` to create/tear down per-peer `RTCPeerConnection`s, reacts to `listSignalsForMe` to drive negotiation, writes outgoing signals via `sendSignal` (depends on T055, T056)
-- [ ] T059 [US5] Build `CallView.tsx`, `VideoTile.tsx`, `CallControls.tsx` in `src/components/call/` (mute/camera toggle, speaking indicator, leave button, "channel full" rejection message)
-- [ ] T060 [US5] Show connected-participant indicator per voice channel in `ChannelSidebar.tsx` wired to `getActiveCallForChannel`/`listParticipants` (FR-022)
-- [ ] T061 [US5] Add "Start Video Call" action to `DirectMessagePage.tsx` calling `startDmCall` (FR-024)
+- [X] T050 [P] [US5] Implement `joinVoiceChannel` in `convex/calls.ts`: find-or-create `calls` row by `channelId`, enforce the 4-participant cap via `callParticipants.by_call` count (FR-018, FR-019, Clarification)
+- [X] T051 [P] [US5] Implement `startDmCall` in `convex/calls.ts` for `threadId`-based calls (FR-024)
+- [X] T052 [US5] Implement `leaveCall` in `convex/calls.ts`: deletes the participant row, ends the call if last participant (FR-023)
+- [X] T053 [P] [US5] Implement `setMediaState`, `setSpeaking`, `heartbeatCall` in `convex/calls.ts` (FR-020, FR-021)
+- [X] T054 [P] [US5] Implement `listParticipants`, `getActiveCallForChannel` in `convex/calls.ts` (FR-022)
+- [X] T055 [P] [US5] Implement `sendSignal`, `listSignalsForMe` in `convex/signals.ts`, gated by current-participant checks on both `fromUserId` and `toUserId`
+- [X] T056 [P] [US5] Implement perfect-negotiation `RTCPeerConnection` wrapper in `src/lib/webrtc/peerConnection.ts` per research.md §4 (polite/impolite role assignment, ICE rollback on glare, ICE candidate queueing)
+- [X] T057 [P] [US5] Define STUN server config in `src/lib/webrtc/constants.ts` (`stun:stun.l.google.com:19302`, documented no-TURN limitation)
+- [X] T058 [US5] Implement `useWebRTCCall` hook in `src/hooks/useWebRTCCall.ts`: reacts to `listParticipants` to create/tear down per-peer `RTCPeerConnection`s, reacts to `listSignalsForMe` to drive negotiation, writes outgoing signals via `sendSignal` (depends on T055, T056) — fixed a typecheck error (`otherIds` was inferred as `Set<Id<"users">>`, now explicitly `Set<string>` to match the `Map<string, PerfectNegotiationPeer>` key type)
+- [X] T059 [US5] Build `CallView.tsx`, `VideoTile.tsx`, `CallControls.tsx` in `src/components/call/` (mute/camera toggle, speaking indicator, leave button, "channel full" rejection message) — added the missing `src/routes/VoiceChannelPage.tsx` to host `CallView`, joining the voice channel on mount via `joinVoiceChannel` and handling the `channel_full` rejection and post-leave/rejoin states
+- [X] T060 [US5] Show connected-participant indicator per voice channel in `ChannelSidebar.tsx` wired to `getActiveCallForChannel`/`listParticipants` (FR-022) — added `VoiceChannelStatus` subcomponent: a green dot + live participant count next to each voice channel, titled with participant names, hidden entirely when no call is active
+- [X] T061 [US5] Add "Start Video Call" action to `DirectMessagePage.tsx` calling `startDmCall` (FR-024)
 
 **Checkpoint**: Run quickstart.md M5 in full, including the 5th-participant rejection and the DM-initiated call.
 
@@ -185,12 +185,12 @@ under `convex/`, tests under `tests/`.
 
 **Purpose**: Final quality gates before submission
 
-- [ ] T062 [P] Write `README.md`: setup steps, architecture summary (per plan.md), and known limitations (no TURN server — strict-NAT calls may fail; hard 4-participant call cap)
-- [ ] T063 [P] Unit tests in `tests/unit/` for `convex/lib/permissions.ts` and `convex/lib/validation.ts` (plan.md Testing section)
-- [ ] T064 [P] Unit tests in `tests/unit/` for `src/lib/webrtc/peerConnection.ts` glare/rollback logic (plan.md Testing section)
-- [ ] T065 Confirm no secrets committed: verify `.env.local` was never staged in any commit (`git log --all --full-history -- .env.local` should be empty)
-- [ ] T066 Run full quickstart.md M1-M5 walkthrough end-to-end with two real browsers as a final regression pass
-- [ ] T067 Verify constitution compliance: grep the codebase for any `useEffect` + one-shot data fetch that should be a `useQuery` (Principle II regression check)
+- [X] T062 [P] Write `README.md`: setup steps, architecture summary (per plan.md), and known limitations (no TURN server — strict-NAT calls may fail; hard 4-participant call cap)
+- [X] T063 [P] Unit tests in `tests/unit/` for `convex/lib/permissions.ts` and `convex/lib/validation.ts` (plan.md Testing section) — `validation.ts` covered under T018; added `tests/unit/lib/permissions.test.ts` (11 tests via `convex-test`'s `t.run`/`t.withIdentity` against real schema-backed fixtures) covering `requireAuthUserId`, `assertServerMember`, `assertServerOwner`, `assertMessageAuthor`, and `assertCallParticipant` — both the throw and success paths for each
+- [X] T064 [P] Unit tests in `tests/unit/` for `src/lib/webrtc/peerConnection.ts` glare/rollback logic (plan.md Testing section) — added `tests/unit/webrtc/peerConnection.test.ts` (11 tests) with a hand-written `FakeRTCPeerConnection` (`vi.stubGlobal`) modeling just the `signalingState` transitions needed to drive `PerfectNegotiationPeer`'s perfect-negotiation logic: no-collision offer/answer, impolite-peer-ignores-glare, polite-peer-yields-and-answers, ICE candidate forwarding + silent-drop-on-ignored-offer, `close()`, and `replaceLocalStream()`
+- [X] T065 Confirm no secrets committed: verify `.env.local` was never staged in any commit (`git log --all --full-history -- .env.local` should be empty)
+- [X] T066 Run full quickstart.md M1-M5 walkthrough end-to-end with two real browsers as a final regression pass — all five milestones (Auth, Servers & Channels, Real-Time Chat, DMs & Presence, Voice/Video Calls) passed with two real browsers
+- [X] T067 Verify constitution compliance: grep the codebase for any `useEffect` + one-shot data fetch that should be a `useQuery` (Principle II regression check)
 
 ---
 
