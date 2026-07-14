@@ -12,20 +12,20 @@ function as **Auth**.
 | Function | Type | Args | Returns | Auth |
 |---|---|---|---|---|
 | `getCurrentUser` | query | `{}` | `User \| null` | none (returns null if unauthenticated) |
-| `updateProfile` | mutation | `{ name?: string, avatarUrl?: string }` | `void` | caller must be authenticated |
-| `heartbeat` | mutation | `{}` | `void` | caller must be authenticated; updates `lastHeartbeat` |
-| `getPresence` | query | `{ userIds: Id<"users">[] }` | `Record<Id<"users">, "online" \| "offline">` | none; derived from `lastHeartbeat` vs 30s cutoff |
+| `updateProfile` | mutation | `{ name?: string, avatarUrl?: string }` | `void` | caller must be authenticated (FR-001) |
+| `heartbeat` | mutation | `{}` | `void` | caller must be authenticated; updates `lastHeartbeat` (FR-002) |
+| `getPresence` | query | `{ userIds: Id<"users">[] }` | `Record<Id<"users">, "online" \| "offline">` | none; derived from `lastHeartbeat` vs 30s cutoff (FR-002) |
 
 ## servers.ts
 
 | Function | Type | Args | Returns | Auth |
 |---|---|---|---|---|
 | `createServer` | mutation | `{ name: string, imageUrl?: string }` | `Id<"servers">` | authenticated; creates server + owner `serverMembers` row + default "general" text channel (FR-003, FR-004) |
-| `renameServer` | mutation | `{ serverId, name }` | `void` | caller must be `ownerId` of the server |
+| `renameServer` | mutation | `{ serverId, name }` | `void` | caller must be `ownerId` of the server (FR-007) |
 | `generateInvite` \| `getInvite` | query/mutation | `{ serverId }` | `{ inviteCode: string }` | caller must be a member (invite already exists per server, never expires — FR-027) |
 | `joinViaInvite` | mutation | `{ inviteCode: string }` | `Id<"servers">` | authenticated; idempotent if already a member |
 | `leaveServer` | mutation | `{ serverId }` | `void` | caller must be a member; reassigns ownership to next-oldest member if caller is owner, deletes server if caller is last member (Clarification, FR-007a) |
-| `removeMember` | mutation | `{ serverId, userId }` | `void` | caller must be `ownerId`; cannot remove self (use `leaveServer`) |
+| `removeMember` | mutation | `{ serverId, userId }` | `void` | caller must be `ownerId`; cannot remove self (use `leaveServer`) (FR-007) |
 | `listMyServers` | query | `{}` | `Server[]` | authenticated; via `serverMembers.by_user` |
 | `listMembers` | query | `{ serverId }` | `(ServerMember & { user: User, presence: "online"\|"offline" })[]` | caller must be a member |
 
@@ -34,16 +34,16 @@ function as **Auth**.
 | Function | Type | Args | Returns | Auth |
 |---|---|---|---|---|
 | `listChannels` | query | `{ serverId }` | `Channel[]` | caller must be a member (all members see all channels, FR-010) |
-| `createChannel` | mutation | `{ serverId, name, type: "text"\|"voice" }` | `Id<"channels">` | caller must be `ownerId` |
-| `renameChannel` | mutation | `{ channelId, name }` | `void` | caller must be `ownerId` of the parent server |
-| `deleteChannel` | mutation | `{ channelId }` | `void` | caller must be `ownerId`; cascades: deletes messages (FR-009), ends any active call (Edge Case) |
+| `createChannel` | mutation | `{ serverId, name, type: "text"\|"voice" }` | `Id<"channels">` | caller must be `ownerId` (FR-008) |
+| `renameChannel` | mutation | `{ channelId, name }` | `void` | caller must be `ownerId` of the parent server (FR-008) |
+| `deleteChannel` | mutation | `{ channelId }` | `void` | caller must be `ownerId` (FR-008); cascades: deletes messages (FR-009), ends any active call (FR-025, Edge Case) |
 
 ## messages.ts
 
 | Function | Type | Args | Returns | Auth |
 |---|---|---|---|---|
-| `listMessages` | query (paginated) | `{ channelId, paginationOpts }` | `PaginationResult<Message>` | caller must be a member of the channel's server |
-| `sendMessage` | mutation | `{ channelId, body }` | `Id<"messages">` | caller must be a member; rejects `body.length > 2000` (FR-026) |
+| `listMessages` | query (paginated) | `{ channelId, paginationOpts }` | `PaginationResult<Message>` | caller must be a member of the channel's server (FR-012, FR-014) |
+| `sendMessage` | mutation | `{ channelId, body }` | `Id<"messages">` | caller must be a member; rejects `body.length > 2000` (FR-011, FR-026) |
 | `editMessage` | mutation | `{ messageId, body }` | `void` | caller must be the message's `authorId` (FR-013) |
 | `deleteMessage` | mutation | `{ messageId }` | `void` | caller must be the message's `authorId` |
 
