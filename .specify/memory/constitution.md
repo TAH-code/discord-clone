@@ -1,50 +1,90 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+- Version change: TEMPLATE → 1.0.0 (initial ratification)
+- Modified principles: n/a (first adoption)
+- Added sections: Core Principles (6), Technology Constraints, Development Workflow, Governance
+- Removed sections: none
+- Templates requiring updates:
+  - .specify/templates/plan-template.md ✅ (no changes needed; already generic)
+  - .specify/templates/spec-template.md ✅ (no changes needed; already generic)
+  - .specify/templates/tasks-template.md ✅ (no changes needed; already generic)
+  - .claude/skills/* ✅ (no agent-specific references to reconcile)
+- Follow-up TODOs: none
+-->
+
+# Discord Clone Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Simplicity First
+Prefer the smallest solution that satisfies the spec. No speculative abstractions,
+no design patterns introduced ahead of need, and no libraries or dependencies beyond
+those named in the approved implementation plan. If a simpler approach meets the
+requirement, it is the correct approach, even if a more general one is more elegant.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Real-Time Correctness
+The UI MUST reflect server state through reactive subscriptions. Manual polling,
+page refreshes, or stale cached reads to observe state changes that another user
+or process produced are prohibited. Any view of shared data (messages, presence,
+membership, call state) must update on its own once the underlying data changes.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Type Safety End-to-End
+TypeScript strict mode is mandatory across the entire codebase. Database access
+must go exclusively through typed schema definitions — no untyped documents, no
+`any` escape hatches around persisted data. Types are the contract between frontend
+and backend and must not be bypassed for convenience.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Security Basics
+Every backend function MUST validate that the caller is authenticated and
+authorized for the specific resource it touches (e.g., a member of the server,
+the author of the message being edited). Absence of an auth/authorization check
+in a backend function is a defect, not an oversight to fix later.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Incremental Delivery
+The application MUST build and run after each user story is completed. The main
+branch is never left in a broken state between stories. Work is implemented and
+verified story-by-story rather than as one large, unverified batch.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### VI. Testable Seams (NON-NEGOTIABLE)
+Business logic MUST be separated from UI so it can be exercised without a browser.
+Critical flows — sending a message, joining a call — require at least a smoke test
+proving the flow completes end-to-end. A feature without a corresponding test for
+its critical path is incomplete.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+## Technology Constraints
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+No specific frontend framework, database, or real-time transport is prescribed by
+this constitution. The technology stack is decided during the planning phase
+(`/speckit-plan`) and recorded in `plan.md`; this constitution constrains *how*
+that stack is used (simplicity, type safety, real-time reactivity, security,
+testability), not *which* stack is chosen. Any spec produced under this
+constitution must remain implementation-agnostic — it must still make sense if
+the underlying stack were swapped out entirely.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Development Workflow
+
+Work proceeds in the Spec-Driven Development order: constitution → specify →
+clarify → plan → analyze → tasks → implement. Each phase's artifact is committed
+to git before the next phase begins, so the artifact history is a complete,
+reviewable record of how the project was built. Implementation is executed one
+user story (or milestone) at a time, with a manual verification checkpoint after
+each, per Principle V.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes ad-hoc practices and prior verbal agreements about
+how the project is built. All plans, specs, and generated code are expected to
+comply with it; any deviation must be explicitly justified in the relevant
+artifact (e.g., a "Complexity Tracking" note in `plan.md`) rather than silently
+introduced.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+Amendments require: (1) a proposed change to this file, (2) a version bump per
+the policy below, and (3) a check that dependent templates (`plan-template.md`,
+`spec-template.md`, `tasks-template.md`) still align with the updated principles.
+
+Versioning policy (semantic versioning applied to governance):
+- MAJOR: Backward-incompatible principle removals or redefinitions.
+- MINOR: A new principle or materially expanded section is added.
+- PATCH: Wording, clarification, or typo fixes with no semantic change.
+
+**Version**: 1.0.0 | **Ratified**: 2026-07-14 | **Last Amended**: 2026-07-14
