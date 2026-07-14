@@ -8,6 +8,15 @@
 
 **Input**: User description: "Build a real-time chat and video calling application modeled on Discord. Users sign up and log in with a display name, avatar, and visible online/offline status. Users create communities ('servers') with an owner, invite links, and a member list. Servers contain text and voice channels; every server starts with a default 'general' text channel. Members send real-time text messages with edit/delete, timestamps, typing indicators, and infinite-scroll history. Any user can open a 1-on-1 direct message with another member of a shared server. Members can join a voice channel to start or join a live voice/video call (2-4 participants) with mute/camera toggle and speaking indicators; 1-on-1 video calls can also start from a DM. Out of scope for v1: attachments, reactions, threads, granular roles/permissions, screen sharing, mobile apps, message search."
 
+## Clarifications
+
+### Session 2026-07-14
+
+- Q: Can members leave a server voluntarily, and what happens if the owner leaves? → A: Members can leave voluntarily; if the owner leaves, ownership auto-transfers to the next-oldest member.
+- Q: How long without a heartbeat before a user is marked offline? → A: 30 seconds.
+- Q: Is there a hard cap on voice channel call participants? → A: Yes, hard cap at 4; a 5th user is rejected/blocked from joining with a "channel full" message.
+- Q: What happens to an existing DM conversation if the two users later no longer share any server? → A: Preserved — the existing DM stays fully usable; the shared-server requirement only applies to opening a new DM.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Real-Time Text Messaging in a Channel (Priority: P1)
@@ -59,6 +68,7 @@ This is testable in isolation using only "sign up" and "create/join server."
 2. **Given** a server owner, **When** they generate an invite link, **Then** any user who opens that link and is logged in can join the server as a member.
 3. **Given** a member has joined a server, **When** any other member views that server's member list, **Then** the new member appears with their current online/offline status, without a page refresh.
 4. **Given** a server owner, **When** they rename the server or remove a member, **Then** the change is reflected for all members without a refresh.
+5. **Given** a member (including the owner), **When** they choose to leave the server, **Then** their membership ends immediately; if the departing member was the owner, ownership automatically transfers to the next-oldest remaining member.
 
 ---
 
@@ -128,7 +138,7 @@ is visible to the other. Testable independently once a voice channel exists
 **Acceptance Scenarios**:
 
 1. **Given** a voice channel with no active call, **When** a member joins it, **Then** a call starts and the member is shown as connected to that channel in the channel list, visible to all server members.
-2. **Given** a member already in a call in a voice channel, **When** another member joins the same channel, **Then** both participants can see and hear each other (at least 2 participants supported; target up to 4).
+2. **Given** a member already in a call in a voice channel, **When** another member joins the same channel, **Then** both participants can see and hear each other (at least 2 participants supported; hard cap of 4).
 3. **Given** a participant in a call, **When** they toggle their microphone or camera, **Then** other participants see the updated mute/camera state and, for camera, either see the video feed or its absence.
 4. **Given** a participant in a call, **When** they are speaking, **Then** other participants see a visual indicator that this participant is currently speaking.
 5. **Given** a participant in a call, **When** they choose to leave, **Then** they are removed from the call and other participants see them disconnect; the channel list no longer shows them as connected to that channel.
@@ -142,21 +152,23 @@ is visible to the other. Testable independently once a voice channel exists
 - What happens when a member loses their network connection mid-call or mid-typing? They are treated as disconnected/offline once presence detects the drop; stale call participant records are cleaned up rather than left dangling.
 - What happens when a user tries to open a DM with someone they share no server with? The action is not permitted — DMs require a shared server membership.
 - What happens when the server owner removes a member who is currently in a voice call or has unread DMs? The member is removed from the server and its channels immediately; any active call participation for that member ends, but existing DM history with them is preserved.
-- What happens when a 5th user attempts to join a voice channel already at the 4-participant target? The system MUST still allow the attempt to succeed on a best-effort basis, but call quality/experience beyond 4 participants is not guaranteed in v1.
+- What happens when a 5th user attempts to join a voice channel already at the 4-participant cap? The join attempt is rejected/blocked and the user sees a "channel full" message; the existing 4 participants are unaffected.
 - What happens when a message exceeds the maximum length? The system prevents submission and indicates the limit to the author before it is sent.
 - What happens when an invite link is used by a user who is not logged in? They are prompted to sign up or log in first, then joined to the server automatically afterward.
+- What happens when the last remaining member of a server leaves? The server, its channels, and its messages are deleted entirely.
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
 - **FR-001**: System MUST allow a user to sign up and log in, and MUST associate every account with a display name and an avatar.
-- **FR-002**: System MUST show every user's online/offline status to other users who share a server with them, and MUST update that status without requiring a page refresh.
+- **FR-002**: System MUST show every user's online/offline status to other users who share a server with them, and MUST update that status without requiring a page refresh. A user MUST be marked offline after 30 seconds without a presence heartbeat.
 - **FR-003**: System MUST allow a logged-in user to create a server with a name and an optional image; that user becomes the server's owner.
 - **FR-004**: System MUST automatically create a default text channel named "general" whenever a new server is created.
 - **FR-005**: System MUST allow a server owner to generate an invite link that any logged-in user can use to join the server as a member.
 - **FR-006**: System MUST display, for each server, a list of its members and each member's current online/offline status.
 - **FR-007**: System MUST allow a server owner to rename the server and to remove members from it.
+- **FR-007a**: System MUST allow any member, including the owner, to voluntarily leave a server; if the departing member is the owner, ownership MUST automatically transfer to the next-oldest remaining member. If the departing member is the server's last remaining member, the server MUST be deleted along with its channels and messages.
 - **FR-008**: System MUST allow a server owner to create, rename, and delete both text channels and voice channels within their server.
 - **FR-009**: System MUST permanently remove a channel's messages when that channel is deleted.
 - **FR-010**: System MUST allow all members of a server to view all of that server's text and voice channels.
@@ -165,10 +177,10 @@ is visible to the other. Testable independently once a voice channel exists
 - **FR-013**: System MUST allow a message's author (and only that author) to edit or delete their own message, and MUST mark edited messages as edited.
 - **FR-014**: System MUST load channel message history newest-first and MUST support loading additional older history incrementally (infinite scroll) as the member scrolls.
 - **FR-015**: System MUST show other members a typing indicator while a member is composing a message in a channel they are viewing, and MUST clear it when typing stops or the message is sent.
-- **FR-016**: System MUST allow any user to open a direct 1-on-1 conversation with another user, provided the two users share membership in at least one server.
+- **FR-016**: System MUST allow any user to open a new direct 1-on-1 conversation with another user, provided the two users share membership in at least one server at the time it is opened. Once opened, an existing DM conversation MUST remain fully usable (sending and receiving messages) even if the two users later no longer share any server.
 - **FR-017**: System MUST apply the same real-time delivery, editing, and deletion behavior to direct messages as to channel messages.
 - **FR-018**: System MUST allow a member to join a voice channel, starting a call if none is active or joining the existing one if other members are already connected.
-- **FR-019**: System MUST support at least 2 simultaneous participants in a voice channel call and target support for up to 4.
+- **FR-019**: System MUST support at least 2 simultaneous participants in a voice channel call, up to a hard cap of 4; a 5th user attempting to join MUST be rejected with a "channel full" message.
 - **FR-020**: System MUST allow a call participant to toggle their own microphone and camera, and MUST reflect each participant's current mute/camera state to the other participants.
 - **FR-021**: System MUST indicate to other participants when a given participant is currently speaking.
 - **FR-022**: System MUST display, in the channel list, which members are currently connected to each voice channel.
@@ -198,11 +210,11 @@ is visible to the other. Testable independently once a voice channel exists
 
 - **SC-001**: A message sent by one member appears for other members currently viewing the same channel or DM within 1 second, with no manual refresh.
 - **SC-002**: A newly joined server member appears in the member list, and a newly created/renamed/deleted channel appears in the channel list, for all other members within 1 second of the change, with no manual refresh.
-- **SC-003**: A change in a user's online/offline status is visible to other members sharing a server with them within 10 seconds of the underlying change (e.g., closing the app).
+- **SC-003**: A change in a user's online/offline status is visible to other members sharing a server with them within 40 seconds of the underlying change (e.g., closing the app) — 30 seconds for the offline heartbeat timeout plus up to 10 seconds for propagation.
 - **SC-004**: At least 95% of attempts by two members to establish a voice/video call in a shared voice channel succeed in showing both participants' audio/video to each other within 10 seconds of both having joined.
 - **SC-005**: A member can go from "logged out" to "sending their first message in a server" in under 3 minutes, covering sign-up, server join via invite link, and message send.
 - **SC-006**: A server supports at least 10 members and 10 channels without any member-list, channel-list, or messaging behavior degrading or becoming unresponsive.
-- **SC-007**: A voice channel call supports at least 2 concurrent participants with functioning two-way audio/video, and up to 4 participants without the call becoming unusable.
+- **SC-007**: A voice channel call supports 2–4 concurrent participants with functioning two-way audio/video; a 5th join attempt is cleanly rejected without disrupting the existing 4 participants.
 
 ## Assumptions
 
