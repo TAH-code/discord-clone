@@ -61,9 +61,11 @@ export default function ServerSettingsModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="w-full max-w-sm rounded-lg bg-neutral-800 p-6 shadow-xl">
-        <h2 className="mb-4 text-lg font-bold text-white">Server Settings</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div className="w-full max-w-sm rounded-lg bg-white p-6 shadow-xl">
+        <h2 className="mb-4 text-lg font-bold text-neutral-900">
+          Server Settings
+        </h2>
 
         {isOwner && (
           <div className="mb-4">
@@ -74,11 +76,11 @@ export default function ServerSettingsModal({
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded bg-neutral-900 px-3 py-2 text-white outline-none ring-1 ring-neutral-700 focus:ring-indigo-500"
+                className="w-full rounded-md bg-neutral-50 px-3 py-2 text-neutral-900 outline-none ring-1 ring-neutral-200 focus:ring-indigo-500"
               />
               <button
                 onClick={handleRename}
-                className="rounded bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-500"
+                className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-500"
               >
                 Save
               </button>
@@ -94,7 +96,7 @@ export default function ServerSettingsModal({
             <input
               readOnly
               value={inviteLink}
-              className="w-full rounded bg-neutral-900 px-3 py-2 text-sm text-neutral-300 outline-none"
+              className="w-full rounded-md bg-neutral-50 px-3 py-2 text-sm text-neutral-600 outline-none ring-1 ring-neutral-200"
             />
             <button
               onClick={() => {
@@ -102,7 +104,7 @@ export default function ServerSettingsModal({
                 setCopied(true);
                 setTimeout(() => setCopied(false), 1500);
               }}
-              className="rounded bg-neutral-700 px-3 py-1.5 text-sm text-white hover:bg-neutral-600"
+              className="rounded-md bg-neutral-100 px-3 py-1.5 text-sm font-medium text-neutral-700 hover:bg-neutral-200"
             >
               {copied ? "Copied!" : "Copy"}
             </button>
@@ -110,23 +112,23 @@ export default function ServerSettingsModal({
           {isOwner && (
             <button
               onClick={() => void handleRegenerateInvite()}
-              className="mt-1.5 text-xs text-neutral-500 hover:text-neutral-300"
+              className="mt-1.5 text-xs text-neutral-400 hover:text-neutral-700"
             >
               Regenerate invite link
             </button>
           )}
         </div>
 
-        <div className="flex justify-between border-t border-neutral-700 pt-4">
+        <div className="flex justify-between border-t border-neutral-200 pt-4">
           <button
             onClick={handleLeave}
-            className="rounded px-3 py-1.5 text-sm font-semibold text-red-400 hover:bg-red-500/10"
+            className="rounded-md px-3 py-1.5 text-sm font-semibold text-red-500 hover:bg-red-50"
           >
             Leave Server
           </button>
           <button
             onClick={onClose}
-            className="rounded px-3 py-1.5 text-sm text-neutral-400 hover:text-white"
+            className="rounded-md px-3 py-1.5 text-sm text-neutral-500 hover:text-neutral-900"
           >
             Close
           </button>

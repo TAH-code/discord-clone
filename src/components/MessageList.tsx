@@ -51,7 +51,7 @@ export default function MessageList({
   return (
     <div
       ref={containerRef}
-      className="flex flex-1 flex-col overflow-y-auto px-4 py-2"
+      className="flex flex-1 flex-col overflow-y-auto bg-panel px-4 py-2"
       onScroll={(e) => {
         const el = e.currentTarget;
         if (el.scrollTop < 100 && status === "CanLoadMore") {
@@ -62,13 +62,13 @@ export default function MessageList({
       {status === "CanLoadMore" && (
         <button
           onClick={() => loadMore(25)}
-          className="mb-2 w-full text-center text-xs text-neutral-500 hover:text-neutral-300"
+          className="mb-2 w-full text-center text-xs text-neutral-400 hover:text-neutral-700"
         >
           Load older messages
         </button>
       )}
       {status === "LoadingMore" && (
-        <p className="mb-2 text-center text-xs text-neutral-500">Loading…</p>
+        <p className="mb-2 text-center text-xs text-neutral-400">Loading…</p>
       )}
       {chronological.map((message) => (
         <MessageRow
@@ -105,8 +105,8 @@ function MessageRow({
   }
 
   return (
-    <div className="group flex gap-3 rounded px-2 py-1.5 hover:bg-neutral-800/40">
-      <span className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-neutral-700 text-xs font-semibold text-white">
+    <div className="group flex gap-3 rounded-md px-2 py-1.5 hover:bg-neutral-50">
+      <span className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-neutral-300 text-xs font-semibold text-white">
         {message.authorAvatarUrl ? (
           <img
             src={message.authorAvatarUrl}
@@ -119,17 +119,17 @@ function MessageRow({
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
-          <span className="font-semibold text-white">
+          <span className="font-semibold text-neutral-900">
             {message.authorName}
           </span>
-          <span className="text-xs text-neutral-500">
+          <span className="text-xs text-neutral-400">
             {new Date(message.createdAt).toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
             })}
           </span>
           {message.editedAt && (
-            <span className="text-xs text-neutral-500">(edited)</span>
+            <span className="text-xs text-neutral-400">(edited)</span>
           )}
         </div>
         {editing ? (
@@ -142,23 +142,23 @@ function MessageRow({
                 if (e.key === "Enter") void handleSaveEdit();
                 if (e.key === "Escape") setEditing(false);
               }}
-              className="flex-1 rounded bg-neutral-900 px-2 py-1 text-sm text-white outline-none ring-1 ring-neutral-700 focus:ring-indigo-500"
+              className="flex-1 rounded bg-white px-2 py-1 text-sm text-neutral-900 outline-none ring-1 ring-neutral-300 focus:ring-indigo-500"
             />
             <button
               onClick={() => void handleSaveEdit()}
-              className="text-xs text-indigo-400 hover:text-indigo-300"
+              className="text-xs text-indigo-600 hover:text-indigo-500"
             >
               Save
             </button>
             <button
               onClick={() => setEditing(false)}
-              className="text-xs text-neutral-500 hover:text-neutral-300"
+              className="text-xs text-neutral-400 hover:text-neutral-700"
             >
               Cancel
             </button>
           </div>
         ) : (
-          <p className="whitespace-pre-wrap break-words text-neutral-200">
+          <p className="whitespace-pre-wrap break-words text-neutral-700">
             {message.body}
           </p>
         )}
@@ -167,13 +167,13 @@ function MessageRow({
         <div className="hidden gap-2 self-start group-hover:flex">
           <button
             onClick={() => setEditing(true)}
-            className="text-xs text-neutral-500 hover:text-white"
+            className="text-xs text-neutral-400 hover:text-neutral-900"
           >
             ✎
           </button>
           <button
             onClick={() => void onDelete(message._id)}
-            className="text-xs text-neutral-500 hover:text-red-400"
+            className="text-xs text-neutral-400 hover:text-red-500"
           >
             🗑
           </button>

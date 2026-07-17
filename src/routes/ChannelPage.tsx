@@ -16,7 +16,8 @@ export default function ChannelPage() {
   const channel = channels?.find((c) => c._id === cid);
 
   if (channel === undefined) return null;
-  if (channel.type === "voice") return <VoiceChannelPage channelId={cid} />;
+  if (channel.type === "voice")
+    return <VoiceChannelPage channelId={cid} title={channel.name} />;
   return <TextChannelPage channelId={cid} />;
 }
 

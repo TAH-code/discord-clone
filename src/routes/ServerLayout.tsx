@@ -9,12 +9,14 @@ import ChannelSidebar, {
 } from "../components/ChannelSidebar";
 import DirectMessageList from "../components/DirectMessageList";
 import MemberList from "../components/MemberList";
+import TopNavbar from "../components/TopNavbar";
+import UserBar from "../components/UserBar";
 import CreateOrJoinServerModal from "../components/CreateOrJoinServerModal";
 import CreateChannelModal from "../components/CreateChannelModal";
 import ServerSettingsModal from "../components/ServerSettingsModal";
 
 export default function ServerLayout() {
-  const { serverId } = useParams();
+  const { serverId, channelId, threadId } = useParams();
   const navigate = useNavigate();
   const sid = serverId as Id<"servers">;
 
@@ -32,9 +34,12 @@ export default function ServerLayout() {
   const [showCreateServer, setShowCreateServer] = useState(false);
   const [showCreateChannel, setShowCreateChannel] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [membersVisible, setMembersVisible] = useState(true);
 
   const server = servers?.find((s) => s._id === sid);
   const isOwner = server !== undefined && currentUser?._id === server.ownerId;
+  const activeChannel = channels?.find((c) => c._id === channelId);
+  const activeThread = threads?.find((t) => t._id === threadId);
 
   async function handleRenameChannel(channel: ChannelSummary) {
     const name = window.prompt("Rename channel to:", channel.name);
@@ -63,43 +68,60 @@ export default function ServerLayout() {
     }
   }
 
+  const isVoiceChannel = activeChannel?.type === "voice";
+  const headerTitle = activeThread
+    ? activeThread.otherUserName
+    : (activeChannel?.name ?? server?.name ?? "");
+  const headerIcon = activeThread ? "@" : "#";
+
   return (
-    <div className="flex h-screen bg-neutral-800">
-      <ServerRail
-        servers={servers ?? []}
-        onCreateServer={() => setShowCreateServer(true)}
-      />
-      <div className="flex w-60 min-h-0 flex-col overflow-hidden">
-        <ChannelSidebar
-          serverName={server?.name ?? ""}
-          channels={channels ?? []}
-          canManage={isOwner}
-          onCreateChannel={() => setShowCreateChannel(true)}
-          onRenameChannel={handleRenameChannel}
-          onDeleteChannel={handleDeleteChannel}
+    <div className="h-screen w-screen bg-app-bg p-3">
+      <div className="flex h-full overflow-hidden rounded-2xl bg-panel shadow-lg">
+        <ServerRail
+          servers={servers ?? []}
+          onCreateServer={() => setShowCreateServer(true)}
+          currentUserName={currentUser?.name}
         />
-        <DirectMessageList serverId={sid} threads={threads ?? []} />
-      </div>
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <div className="flex h-12 items-center justify-end border-b border-neutral-950 px-4">
-          <button
-            onClick={() => setShowSettings(true)}
-            className="text-sm text-neutral-400 hover:text-white"
-          >
-            ⚙ Server Settings
-          </button>
+        <div className="flex w-60 min-h-0 flex-col overflow-hidden">
+          <ChannelSidebar
+            serverName={server?.name ?? ""}
+            channels={channels ?? []}
+            canManage={isOwner}
+            onCreateChannel={() => setShowCreateChannel(true)}
+            onRenameChannel={handleRenameChannel}
+            onDeleteChannel={handleDeleteChannel}
+          />
+          <DirectMessageList serverId={sid} threads={threads ?? []} />
+          <UserBar
+            name={currentUser?.name ?? "Me"}
+            avatarUrl={currentUser?.avatarUrl}
+            onOpenSettings={() => setShowSettings(true)}
+          />
         </div>
-        <div className="flex-1 overflow-hidden">
-          <Outlet />
+        <div className="flex flex-1 flex-col overflow-hidden">
+          {!isVoiceChannel && (
+            <TopNavbar
+              icon={headerIcon}
+              title={headerTitle}
+              showMemberToggle={!activeThread}
+              membersVisible={membersVisible}
+              onToggleMembers={() => setMembersVisible((v) => !v)}
+            />
+          )}
+          <div className="flex-1 overflow-hidden">
+            <Outlet />
+          </div>
         </div>
+        {membersVisible && !activeThread && !isVoiceChannel && (
+          <MemberList
+            members={members ?? []}
+            currentUserId={currentUser?._id}
+            onMessage={handleMessage}
+            onRemove={handleRemoveMember}
+            canManage={isOwner}
+          />
+        )}
       </div>
-      <MemberList
-        members={members ?? []}
-        currentUserId={currentUser?._id}
-        onMessage={handleMessage}
-        onRemove={handleRemoveMember}
-        canManage={isOwner}
-      />
 
       {showCreateServer && (
         <CreateOrJoinServerModal onClose={() => setShowCreateServer(false)} />

@@ -31,9 +31,10 @@ export default function ChannelSidebar({
   const voiceChannels = channels.filter((c) => c.type === "voice");
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-neutral-900">
-      <div className="flex h-12 flex-shrink-0 items-center border-b border-neutral-950 px-4 font-semibold text-white shadow-sm">
+    <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-panel-muted">
+      <div className="flex h-12 flex-shrink-0 items-center justify-between border-b border-neutral-200 px-4 font-semibold text-neutral-900">
         {serverName}
+        <span className="text-neutral-400">⌄</span>
       </div>
       <div className="flex-1 space-y-4 overflow-y-auto px-2 py-3">
         <ChannelGroup
@@ -58,7 +59,7 @@ export default function ChannelSidebar({
       {canManage && (
         <button
           onClick={onCreateChannel}
-          className="m-2 rounded bg-neutral-800 py-1.5 text-sm text-neutral-300 hover:bg-neutral-700 hover:text-white"
+          className="m-2 rounded bg-white py-1.5 text-sm font-medium text-neutral-600 shadow-sm ring-1 ring-neutral-200 hover:bg-neutral-50 hover:text-neutral-900"
         >
           + Create Channel
         </button>
@@ -87,47 +88,51 @@ function ChannelGroup({
   if (channels.length === 0) return null;
   return (
     <div>
-      <div className="mb-1 px-2 text-xs font-semibold uppercase text-neutral-500">
+      <div className="mb-1 px-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">
         {title}
       </div>
       {channels.map((channel) => (
-        <div
-          key={channel._id}
-          className={`group flex items-center justify-between rounded px-2 py-1.5 text-sm ${
-            activeChannelId === channel._id
-              ? "bg-neutral-800 text-white"
-              : "text-neutral-400 hover:bg-neutral-800/60 hover:text-neutral-200"
-          }`}
-        >
-          <Link
-            to={`/servers/${serverId}/channels/${channel._id}`}
-            className="flex flex-1 items-center gap-1.5 truncate"
+        <div key={channel._id}>
+          <div
+            className={`group flex items-center justify-between rounded-md px-2 py-1.5 text-sm ${
+              activeChannelId === channel._id
+                ? "bg-white font-medium text-neutral-900 shadow-sm ring-1 ring-neutral-200"
+                : "text-neutral-500 hover:bg-white/60 hover:text-neutral-900"
+            }`}
           >
-            <span className="text-neutral-500">
-              {channel.type === "voice" ? "🔊" : "#"}
-            </span>
-            {channel.name}
-          </Link>
+            <Link
+              to={`/servers/${serverId}/channels/${channel._id}`}
+              className="flex flex-1 items-center gap-1.5 truncate"
+            >
+              <span className="text-neutral-400">
+                {channel.type === "voice" ? "🔊" : "#"}
+              </span>
+              {channel.name}
+            </Link>
+            {canManage && (
+              <div className="hidden flex-shrink-0 gap-1 group-hover:flex">
+                <button
+                  title="Rename"
+                  onClick={() => onRenameChannel?.(channel)}
+                  className="text-neutral-400 hover:text-neutral-900"
+                >
+                  ✎
+                </button>
+                <button
+                  title="Delete"
+                  onClick={() => onDeleteChannel?.(channel)}
+                  className="text-neutral-400 hover:text-red-500"
+                >
+                  🗑
+                </button>
+              </div>
+            )}
+          </div>
           {channel.type === "voice" && (
-            <VoiceChannelStatus channelId={channel._id as Id<"channels">} />
-          )}
-          {canManage && (
-            <div className="hidden gap-1 group-hover:flex">
-              <button
-                title="Rename"
-                onClick={() => onRenameChannel?.(channel)}
-                className="text-neutral-500 hover:text-white"
-              >
-                ✎
-              </button>
-              <button
-                title="Delete"
-                onClick={() => onDeleteChannel?.(channel)}
-                className="text-neutral-500 hover:text-red-400"
-              >
-                🗑
-              </button>
-            </div>
+            <VoiceChannelStatus
+              serverId={serverId}
+              channelId={channel._id as Id<"channels">}
+            />
           )}
         </div>
       ))}
@@ -135,7 +140,13 @@ function ChannelGroup({
   );
 }
 
-function VoiceChannelStatus({ channelId }: { channelId: Id<"channels"> }) {
+function VoiceChannelStatus({
+  serverId,
+  channelId,
+}: {
+  serverId: string;
+  channelId: Id<"channels">;
+}) {
   const call = useQuery(api.calls.getActiveCallForChannel, { channelId });
   const participants = useQuery(
     api.calls.listParticipants,
@@ -145,12 +156,19 @@ function VoiceChannelStatus({ channelId }: { channelId: Id<"channels"> }) {
   if (!call || !participants || participants.length === 0) return null;
 
   return (
-    <span
-      title={participants.map((p) => p.userName).join(", ")}
-      className="ml-1 flex flex-shrink-0 items-center gap-1 text-xs text-green-400"
-    >
-      <span className="h-1.5 w-1.5 rounded-full bg-green-400" />
-      {participants.length}
-    </span>
+    <div className="ml-6 mt-0.5 space-y-0.5 border-l border-neutral-200 pl-2">
+      {participants.map((p) => (
+        <Link
+          key={p.userId}
+          to={`/servers/${serverId}/channels/${channelId}`}
+          className="flex items-center gap-1.5 truncate rounded px-1.5 py-1 text-xs text-neutral-500 hover:bg-white/60 hover:text-neutral-900"
+        >
+          <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-neutral-300 text-[8px] font-semibold text-white">
+            {p.userName.slice(0, 2).toUpperCase()}
+          </span>
+          {p.userName}
+        </Link>
+      ))}
+    </div>
   );
 }

@@ -26,10 +26,10 @@ export default function DirectMessagePage() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex h-12 items-center justify-end border-b border-neutral-950 px-4">
+      <div className="flex flex-shrink-0 items-center justify-end border-b border-neutral-200 bg-panel px-4 py-1.5">
         <button
           onClick={() => void startDmCall({ threadId: tid })}
-          className="text-sm text-neutral-400 hover:text-white"
+          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900"
         >
           📹 Start Video Call
         </button>

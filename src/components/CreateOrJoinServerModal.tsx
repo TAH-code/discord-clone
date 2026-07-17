@@ -39,25 +39,25 @@ export default function CreateOrJoinServerModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="w-full max-w-sm rounded-lg bg-neutral-800 p-6 shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div className="w-full max-w-sm rounded-lg bg-white p-6 shadow-xl">
         <div className="mb-4 flex gap-2">
           <button
             onClick={() => setMode("create")}
-            className={`flex-1 rounded py-1.5 text-sm font-semibold ${
+            className={`flex-1 rounded-md py-1.5 text-sm font-semibold ${
               mode === "create"
                 ? "bg-indigo-600 text-white"
-                : "bg-neutral-700 text-neutral-300"
+                : "bg-neutral-100 text-neutral-600"
             }`}
           >
             Create a server
           </button>
           <button
             onClick={() => setMode("join")}
-            className={`flex-1 rounded py-1.5 text-sm font-semibold ${
+            className={`flex-1 rounded-md py-1.5 text-sm font-semibold ${
               mode === "join"
                 ? "bg-indigo-600 text-white"
-                : "bg-neutral-700 text-neutral-300"
+                : "bg-neutral-100 text-neutral-600"
             }`}
           >
             Join via invite
@@ -74,7 +74,7 @@ export default function CreateOrJoinServerModal({
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded bg-neutral-900 px-3 py-2 text-white outline-none ring-1 ring-neutral-700 focus:ring-indigo-500"
+                className="w-full rounded-md bg-neutral-50 px-3 py-2 text-neutral-900 outline-none ring-1 ring-neutral-200 focus:ring-indigo-500"
               />
             </div>
           ) : (
@@ -86,25 +86,25 @@ export default function CreateOrJoinServerModal({
                 required
                 value={inviteCode}
                 onChange={(e) => setInviteCode(e.target.value)}
-                className="w-full rounded bg-neutral-900 px-3 py-2 text-white outline-none ring-1 ring-neutral-700 focus:ring-indigo-500"
+                className="w-full rounded-md bg-neutral-50 px-3 py-2 text-neutral-900 outline-none ring-1 ring-neutral-200 focus:ring-indigo-500"
               />
             </div>
           )}
 
-          {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && <p className="text-sm text-red-500">{error}</p>}
 
           <div className="flex justify-end gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="rounded px-3 py-1.5 text-sm text-neutral-400 hover:text-white"
+              className="rounded-md px-3 py-1.5 text-sm text-neutral-500 hover:text-neutral-900"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="rounded bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
+              className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
             >
               {mode === "create" ? "Create" : "Join"}
             </button>

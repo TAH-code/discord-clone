@@ -43,9 +43,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-900 px-4">
-      <div className="w-full max-w-sm rounded-lg bg-neutral-800 p-8 shadow-lg">
-        <h1 className="mb-1 text-2xl font-bold text-white">
+    <div className="flex min-h-screen items-center justify-center bg-app-bg px-4">
+      <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-lg">
+        <h1 className="mb-1 text-2xl font-bold text-neutral-900">
           {mode === "signUp" ? "Create an account" : "Welcome back"}
         </h1>
         <p className="mb-6 text-sm text-neutral-400">
@@ -65,7 +65,7 @@ export default function LoginPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded bg-neutral-900 px-3 py-2 text-white outline-none ring-1 ring-neutral-700 focus:ring-indigo-500"
+                className="w-full rounded-md bg-neutral-50 px-3 py-2 text-neutral-900 outline-none ring-1 ring-neutral-200 focus:ring-indigo-500"
               />
             </div>
           )}
@@ -78,7 +78,7 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded bg-neutral-900 px-3 py-2 text-white outline-none ring-1 ring-neutral-700 focus:ring-indigo-500"
+              className="w-full rounded-md bg-neutral-50 px-3 py-2 text-neutral-900 outline-none ring-1 ring-neutral-200 focus:ring-indigo-500"
             />
           </div>
           <div>
@@ -90,16 +90,16 @@ export default function LoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded bg-neutral-900 px-3 py-2 text-white outline-none ring-1 ring-neutral-700 focus:ring-indigo-500"
+              className="w-full rounded-md bg-neutral-50 px-3 py-2 text-neutral-900 outline-none ring-1 ring-neutral-200 focus:ring-indigo-500"
             />
           </div>
 
-          {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && <p className="text-sm text-red-500">{error}</p>}
 
           <button
             type="submit"
             disabled={submitting}
-            className="w-full rounded bg-indigo-600 py-2 font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
+            className="w-full rounded-md bg-indigo-600 py-2 font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
           >
             {submitting
               ? "Please wait…"
@@ -114,7 +114,7 @@ export default function LoginPage() {
             setError(null);
             setMode(mode === "signUp" ? "signIn" : "signUp");
           }}
-          className="mt-4 w-full text-center text-sm text-neutral-400 hover:text-white"
+          className="mt-4 w-full text-center text-sm text-neutral-400 hover:text-neutral-900"
         >
           {mode === "signUp"
             ? "Already have an account? Log in"

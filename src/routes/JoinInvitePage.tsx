@@ -22,13 +22,13 @@ export default function JoinInvitePage() {
   if (serverId) return <Navigate to={`/servers/${serverId}`} replace />;
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-neutral-900 text-red-400">
+      <div className="flex min-h-screen items-center justify-center bg-app-bg text-red-500">
         {error}
       </div>
     );
   }
   return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-900 text-neutral-400">
+    <div className="flex min-h-screen items-center justify-center bg-app-bg text-neutral-400">
       Joining server…
     </div>
   );
